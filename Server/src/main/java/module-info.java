@@ -5,7 +5,6 @@ module com.mycompany.server {
     requires derbyclient;
     requires org.json;
 
-    opens com.mycompany.server to javafx.fxml;
 
     exports com.mycompany.server;
 }
