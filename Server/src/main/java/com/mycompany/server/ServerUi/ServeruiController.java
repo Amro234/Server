@@ -11,7 +11,7 @@ import javafx.fxml.Initializable;
 /**
  * FXML Controller class
  *
- * @author DELL
+ * @author DELLgit
  */
 public class ServeruiController implements Initializable {
 
