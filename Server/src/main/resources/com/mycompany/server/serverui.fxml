@@ -215,7 +215,7 @@
                         <HBox layoutX="534.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Circle fill="#3b82f6" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" Lab35% Online" textFill="#718096" />
+                              <Label text=" 35% Online" textFill="#718096" />
                            </children>
                         </HBox>
                         <HBox layoutX="649.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
