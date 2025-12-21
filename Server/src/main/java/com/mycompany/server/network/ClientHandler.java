@@ -44,7 +44,7 @@ public class ClientHandler implements Runnable {
             }
 
         } catch (IOException e) {
-            // System.err.println("[CLIENT] IO Error: " + e.getMessage());
+            System.err.println("[CLIENT] IO Error: " + e.getMessage());
         } finally {
             // Remove user from online list when disconnecting
             if (currentUserId != null) {
