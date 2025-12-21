@@ -132,19 +132,6 @@ public class ClientHandler implements Runnable {
                 availableResponse.put("players", OnlineUsersManager.getInstance().getAvailablePlayersJSON());
                 return availableResponse;
 
-            case "SET_IN_GAME":
-                if (currentUserId != null) {
-                    boolean inGame = request.optBoolean("inGame", false);
-                    OnlineUsersManager.getInstance().setUserInGame(currentUserId, inGame);
-                    JSONObject inGameResponse = new JSONObject();
-                    inGameResponse.put("success", true);
-                    return inGameResponse;
-                }
-                JSONObject failResponse = new JSONObject();
-                failResponse.put("success", false);
-                failResponse.put("message", "Not authenticated");
-                return failResponse;
-
             case "SEND_CHALLENGE":
                 if (currentUserId == null) {
                     JSONObject authError = new JSONObject();
