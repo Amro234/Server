@@ -2,7 +2,6 @@ package com.mycompany.server.service;
 
 import com.mycompany.server.db.DatabaseManager;
 import java.sql.*;
-import java.util.UUID;
 import org.json.JSONObject;
 
 public class AuthService {

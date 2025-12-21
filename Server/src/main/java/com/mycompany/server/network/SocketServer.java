@@ -32,7 +32,7 @@ public class SocketServer {
                         executorService.execute(handler);
 
                     } catch (IOException e) {
-                    
+
                     }
                 }
             } catch (IOException e) {
