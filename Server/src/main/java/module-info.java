@@ -3,6 +3,7 @@ module com.mycompany.server {
     requires javafx.fxml;
     requires java.base;
     requires java.sql;
+    requires org.json;
     requires derbyclient;
 
     opens com.mycompany.server to javafx.fxml;

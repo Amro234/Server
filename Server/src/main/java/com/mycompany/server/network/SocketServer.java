@@ -17,7 +17,7 @@ public class SocketServer {
     public void start() {
         if (running)
             return;
-
+        System.out.println("Server Running on Port 5000");
         new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(PORT);
@@ -32,7 +32,7 @@ public class SocketServer {
                         executorService.execute(handler);
 
                     } catch (IOException e) {
-                    
+
                     }
                 }
             } catch (IOException e) {
