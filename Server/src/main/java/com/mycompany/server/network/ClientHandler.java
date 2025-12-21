@@ -12,6 +12,20 @@ import java.net.Socket;
 import org.json.JSONObject;
 
 public class ClientHandler implements Runnable {
+
+    public enum RequestType {
+        REGISTER,
+        LOGIN,
+        LOGOUT,
+        DISCONNECT,
+        GET_ONLINE_USERS,
+        GET_AVAILABLE_PLAYERS,
+        SEND_CHALLENGE,
+        ACCEPT_CHALLENGE,
+        DECLINE_CHALLENGE,
+        UNKNOWN
+    }
+
     private final Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
@@ -37,8 +51,8 @@ public class ClientHandler implements Runnable {
                 out.flush();
 
                 // Break if logout or connection should close
-                if (request.optString("type").equals("LOGOUT") ||
-                        request.optString("type").equals("DISCONNECT")) {
+                RequestType requestType = parseRequestType(request.optString("type", "UNKNOWN"));
+                if (requestType == RequestType.LOGOUT || requestType == RequestType.DISCONNECT) {
                     break;
                 }
             }
@@ -66,11 +80,19 @@ public class ClientHandler implements Runnable {
         }
     }
 
+    private RequestType parseRequestType(String type) {
+        try {
+            return RequestType.valueOf(type.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return RequestType.UNKNOWN;
+        }
+    }
+
     private JSONObject handleRequest(JSONObject request) {
-        String type = request.optString("type", "UNKNOWN");
+        RequestType type = parseRequestType(request.optString("type", "UNKNOWN"));
 
         switch (type) {
-            case "REGISTER":
+            case REGISTER:
                 JSONObject registerResponse = AuthService.register(
                         request.getString("username"),
                         request.getString("email"),
@@ -90,7 +112,7 @@ public class ClientHandler implements Runnable {
                 }
                 return registerResponse;
 
-            case "LOGIN":
+            case LOGIN:
                 JSONObject loginResponse = AuthService.login(
                         request.getString("username"),
                         request.getString("password"));
@@ -109,8 +131,8 @@ public class ClientHandler implements Runnable {
                 }
                 return loginResponse;
 
-            case "LOGOUT":
-            case "DISCONNECT":
+            case LOGOUT:
+            case DISCONNECT:
                 if (currentUserId != null) {
                     OnlineUsersManager.getInstance().removeUser(currentUserId);
                     currentUserId = null;
@@ -119,20 +141,20 @@ public class ClientHandler implements Runnable {
                 logoutResponse.put("success", true);
                 return logoutResponse;
 
-            case "GET_ONLINE_USERS":
+            case GET_ONLINE_USERS:
                 JSONObject onlineResponse = new JSONObject();
                 onlineResponse.put("success", true);
                 onlineResponse.put("users", OnlineUsersManager.getInstance().getAllOnlineUsersJSON());
                 onlineResponse.put("count", OnlineUsersManager.getInstance().getOnlineCount());
                 return onlineResponse;
 
-            case "GET_AVAILABLE_PLAYERS":
+            case GET_AVAILABLE_PLAYERS:
                 JSONObject availableResponse = new JSONObject();
                 availableResponse.put("success", true);
                 availableResponse.put("players", OnlineUsersManager.getInstance().getAvailablePlayersJSON());
                 return availableResponse;
 
-            case "SEND_CHALLENGE":
+            case SEND_CHALLENGE:
                 if (currentUserId == null) {
                     JSONObject authError = new JSONObject();
                     authError.put("success", false);
@@ -143,7 +165,7 @@ public class ClientHandler implements Runnable {
                 int targetUserId = request.getInt("targetUserId");
                 return ChallengeService.sendChallenge(currentUserId, targetUserId);
 
-            case "ACCEPT_CHALLENGE":
+            case ACCEPT_CHALLENGE:
                 if (currentUserId == null) {
                     JSONObject authError2 = new JSONObject();
                     authError2.put("success", false);
@@ -153,7 +175,7 @@ public class ClientHandler implements Runnable {
 
                 return ChallengeService.acceptChallenge(currentUserId);
 
-            case "DECLINE_CHALLENGE":
+            case DECLINE_CHALLENGE:
                 if (currentUserId == null) {
                     JSONObject authError3 = new JSONObject();
                     authError3.put("success", false);
