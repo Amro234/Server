@@ -66,6 +66,7 @@ public int getTotalUsers() {
         if (rs.next()) {
             total = rs.getInt("total");
         }
+        System.err.println("total "+total);
     } catch (SQLException e) {
         e.printStackTrace();
     }
