@@ -57,6 +57,20 @@ public class DatabaseManager {
            // System.err.println("[DB] Table check/creation failed: " + e.getMessage());
         }
     }
+public int getTotalUsers() {
+    int total = 0;
+    String query = "SELECT COUNT(*) AS total FROM users";
+    try (Connection conn = getConnection();
+         Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        if (rs.next()) {
+            total = rs.getInt("total");
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return total;
+}
 
     
 }
