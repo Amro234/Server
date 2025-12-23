@@ -65,6 +65,7 @@ public class OnlineUsersManager {
     }
 
     public int getOnlineCount() {
+        System.err.println("counttttt"+onlineUsers.size());
         return onlineUsers.size();
     }
 
