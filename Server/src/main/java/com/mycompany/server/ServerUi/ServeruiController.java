@@ -8,8 +8,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 import com.mycompany.server.manager.OnlineUsersManager;
-import com.mycompany.server.db.DatabaseManager;
 import org.json.JSONObject;
 
 public class ServeruiController implements Initializable {
@@ -20,6 +23,10 @@ public class ServeruiController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         drawDonutChart();
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), e -> drawDonutChart()));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
     }
 
     private void drawDonutChart() {
@@ -41,10 +48,15 @@ public class ServeruiController implements Initializable {
                 })
                 .count();
 
-        int totalUsers = DatabaseManager.getInstance().getTotalUsers();
-        int offlineUsers = totalUsers - onlineUsers;
+        int offlineUsers = onlineUsers - activeUsers;
+        if (offlineUsers < 0) offlineUsers = 0;
 
         double total = activeUsers + onlineUsers + offlineUsers;
+        if (total == 0) total = 1;
+
+        System.out.println("Active: " + activeUsers + ", Online: " + onlineUsers +
+                ", Offline: " + offlineUsers + ", Total: " + total);
+
         double startAngle = 90;
 
         double activeAngle = (activeUsers / total) * 360;
