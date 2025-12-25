@@ -2,6 +2,7 @@ package com.mycompany.server.manager;
 
 import com.mycompany.server.model.OnlineUser;
 import com.mycompany.server.network.ClientHandler;
+import com.mycompany.server.db.DatabaseManager;
 import org.json.JSONArray;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -65,7 +66,6 @@ public class OnlineUsersManager {
     }
 
     public int getOnlineCount() {
-        System.err.println("counttttt"+onlineUsers.size());
         return onlineUsers.size();
     }
 
@@ -74,6 +74,19 @@ public class OnlineUsersManager {
         if (user != null) {
             user.setInGame(inGame);
             System.out.println("[ONLINE] User " + user.getUsername() + " inGame status: " + inGame);
+        }
+    }
+
+    public void updateUserScore(int userId, int increment) {
+        OnlineUser user = onlineUsers.get(userId);
+        if (user != null) {
+            int newScore = user.getScore() + increment;
+            user.setScore(newScore);
+
+            // Update DB
+            DatabaseManager.getInstance().updateUserScore(userId, newScore);
+
+            System.out.println("[ONLINE] User " + user.getUsername() + " score updated to " + newScore);
         }
     }
 }

@@ -5,6 +5,7 @@ import com.mycompany.server.manager.OnlineUsersManager;
 import com.mycompany.server.model.Challenge;
 import com.mycompany.server.model.OnlineUser;
 import com.mycompany.server.network.ClientHandler;
+import com.mycompany.server.manager.GameSessionManager;
 import org.json.JSONObject;
 
 public class ChallengeService {
@@ -82,9 +83,12 @@ public class ChallengeService {
             challengerHandler.sendNotification(acceptNotification);
         }
 
+        // Start Game Session
+        GameSessionManager.getInstance().createSession(acceptedChallenge.getChallengerId(), acceptingUserId);
+
         response.put("success", true);
         response.put("message", "Challenge accepted");
-        response.put("opponent", acceptedChallenge.toJSON());
+
         return response;
     }
 
