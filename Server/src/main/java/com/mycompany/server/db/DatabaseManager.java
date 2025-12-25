@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import com.mycompany.server.manager.OnlineUsersManager;
 
 public class DatabaseManager {
     private static DatabaseManager instance;
@@ -21,7 +22,7 @@ public class DatabaseManager {
             }
             createTables();
         } catch (Exception e) {
-          //  System.err.println("[DB] Database fatal error: " + e.getMessage());
+            // System.err.println("[DB] Database fatal error: " + e.getMessage());
         }
     }
 
@@ -59,21 +60,22 @@ public class DatabaseManager {
             // System.err.println("[DB] Table check/creation failed: " + e.getMessage());
         }
     }
-public int getTotalUsers() {
-    int total = 0;
-    String query = "SELECT COUNT(*) AS total FROM users";
-    try (Connection conn = getConnection();
-         Statement stmt = conn.createStatement();
-         ResultSet rs = stmt.executeQuery(query)) {
-        if (rs.next()) {
-            total = rs.getInt("total");
+
+    public int getTotalUsers() {
+        int total = 0;
+        String query = "SELECT COUNT(*) AS total FROM users";
+        try (Connection conn = getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(query)) {
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+            System.err.println("total " + total);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        System.err.println("total "+total);
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return total;
     }
-    return total;
-}
 
     public boolean updateUserScore(int userId, int newScore) {
         String query = "UPDATE users SET score = ? WHERE id = ?";
