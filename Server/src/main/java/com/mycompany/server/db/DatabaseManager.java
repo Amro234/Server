@@ -1,6 +1,5 @@
 package com.mycompany.server.db;
 
-import com.mycompany.server.manager.OnlineUsersManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -22,14 +21,14 @@ public class DatabaseManager {
             }
             createTables();
         } catch (Exception e) {
-            System.err.println("[DB] Database fatal error: " + e.getMessage());
+          //  System.err.println("[DB] Database fatal error: " + e.getMessage());
         }
     }
 
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager();
-             System.out.println("[UI] Total: "+OnlineUsersManager.getInstance().getOnlineCount());
+            System.out.println("[UI] Total: " + OnlineUsersManager.getInstance().getOnlineCount());
         }
         return instance;
     }
@@ -40,8 +39,8 @@ public class DatabaseManager {
 
     private void createTables() {
         try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement()) {
-            
+                Statement stmt = conn.createStatement()) {
+
             // Users table
             try {
                 stmt.executeUpdate("CREATE TABLE users (" +
@@ -52,11 +51,12 @@ public class DatabaseManager {
                         "score INT DEFAULT 0)");
                 System.out.println("[DB] Updated users table verified.");
             } catch (SQLException e) {
-                if (!e.getSQLState().equals("X0Y32")) throw e;
-            }            
+                if (!e.getSQLState().equals("X0Y32"))
+                    throw e;
+            }
 
         } catch (SQLException e) {
-           // System.err.println("[DB] Table check/creation failed: " + e.getMessage());
+            // System.err.println("[DB] Table check/creation failed: " + e.getMessage());
         }
     }
 public int getTotalUsers() {
@@ -75,5 +75,19 @@ public int getTotalUsers() {
     return total;
 }
 
-    
+    public boolean updateUserScore(int userId, int newScore) {
+        String query = "UPDATE users SET score = ? WHERE id = ?";
+        try (Connection conn = getConnection();
+                java.sql.PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setInt(1, newScore);
+            pstmt.setInt(2, userId);
+
+            int affected = pstmt.executeUpdate();
+            return affected > 0;
+        } catch (SQLException e) {
+            System.err.println("[DB] Failed to update score: " + e.getMessage());
+            return false;
+        }
+    }
 }

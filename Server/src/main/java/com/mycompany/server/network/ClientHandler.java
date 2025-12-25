@@ -9,7 +9,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
 import org.json.JSONObject;
 
 public class ClientHandler implements Runnable {
@@ -24,6 +23,11 @@ public class ClientHandler implements Runnable {
         SEND_CHALLENGE,
         ACCEPT_CHALLENGE,
         DECLINE_CHALLENGE,
+        REMATCH_REQUEST,
+        REMATCH_ACCEPT,
+        REMATCH_DECLINE,
+        GAME_MOVE,
+        LEAVE_GAME,
         UNKNOWN
     }
 
@@ -48,8 +52,12 @@ public class ClientHandler implements Runnable {
                 JSONObject request = new JSONObject(requestStr);
                 JSONObject response = handleRequest(request);
 
-                out.writeUTF(response.toString());
-                out.flush();
+                synchronized (this) {
+                    if (out != null && !socket.isClosed()) {
+                        out.writeUTF(response.toString());
+                        out.flush();
+                    }
+                }
 
                 // Break if logout or connection should close
                 RequestType requestType = parseRequestType(request.optString("type", "UNKNOWN"));
@@ -65,6 +73,7 @@ public class ClientHandler implements Runnable {
             if (currentUserId != null) {
                 OnlineUsersManager.getInstance().removeUser(currentUserId);
                 ChallengeManager.getInstance().clearUserChallenges(currentUserId);
+                com.mycompany.server.manager.GameSessionManager.getInstance().handlePlayerDisconnect(currentUserId);
             }
             close();
         }
@@ -72,9 +81,11 @@ public class ClientHandler implements Runnable {
 
     public void sendNotification(JSONObject notification) {
         try {
-            if (out != null && !socket.isClosed()) {
-                out.writeUTF(notification.toString());
-                out.flush();
+            synchronized (this) {
+                if (out != null && !socket.isClosed()) {
+                    out.writeUTF(notification.toString());
+                    out.flush();
+                }
             }
         } catch (IOException e) {
             System.err.println("[CLIENT] Error sending notification: " + e.getMessage());
@@ -186,12 +197,60 @@ public class ClientHandler implements Runnable {
 
                 return ChallengeService.declineChallenge(currentUserId);
 
+            case REMATCH_REQUEST:
+                if (currentUserId == null) {
+                    return authError();
+                }
+                return com.mycompany.server.manager.GameSessionManager.getInstance().requestRematch(currentUserId);
+
+            case REMATCH_ACCEPT:
+                if (currentUserId == null) {
+                    return authError();
+                }
+                return com.mycompany.server.manager.GameSessionManager.getInstance()
+                        .handleRematchResponse(currentUserId, true);
+
+            case REMATCH_DECLINE:
+                if (currentUserId == null) {
+                    return authError();
+                }
+                return com.mycompany.server.manager.GameSessionManager.getInstance()
+                        .handleRematchResponse(currentUserId, false);
+
+            case GAME_MOVE:
+                if (currentUserId == null) {
+                    JSONObject authError = new JSONObject();
+                    authError.put("success", false);
+                    authError.put("message", "Not authenticated");
+                    return authError;
+                }
+                return com.mycompany.server.manager.GameSessionManager.getInstance()
+                        .handleMove(currentUserId, request.getInt("row"), request.getInt("col"));
+
+            case LEAVE_GAME:
+                if (currentUserId == null) {
+                    return authError();
+                }
+                com.mycompany.server.manager.GameSessionManager.getInstance().handlePlayerLeave(currentUserId,
+                        "OPPONENT_LEFT");
+                JSONObject leaveAck = new JSONObject();
+                leaveAck.put("success", true);
+                leaveAck.put("message", "Left game");
+                return leaveAck;
+
             default:
                 JSONObject response = new JSONObject();
                 response.put("success", false);
                 response.put("message", "Request type not supported: " + type);
                 return response;
         }
+    }
+
+    private JSONObject authError() {
+        JSONObject authError = new JSONObject();
+        authError.put("success", false);
+        authError.put("message", "Not authenticated");
+        return authError;
     }
 
     public void close() {

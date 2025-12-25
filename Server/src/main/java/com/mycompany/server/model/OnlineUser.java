@@ -7,7 +7,7 @@ public class OnlineUser {
     private final int userId;
     private final String username;
     private final String email;
-    private final int score;
+    private int score;
     private final ClientHandler clientHandler;
     private boolean isInGame;
 
@@ -56,5 +56,9 @@ public class OnlineUser {
         json.put("score", score);
         json.put("isInGame", isInGame);
         return json;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 }
