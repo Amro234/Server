@@ -150,7 +150,7 @@
                                     <Circle fill="#10b981" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label text=" 428" />
+                                          <Label fx:id="activeLabel" onDragDetected="#ActiveLabel" text="  428" />
                                           <Label text="ACTIVE" />
                                        </children>
                                     </VBox>
@@ -161,7 +161,7 @@
                                     <Circle fill="DODGERBLUE" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label text=" 356" />
+                                          <Label fx:id="onlineLabel" onDragDetected="#OnlineLabel" text="  356" />
                                           <Label text="ONLINE" />
                                        </children>
                                     </VBox>
@@ -172,7 +172,7 @@
                                     <Circle fill="#e5e7eb" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label text=" 240" />
+                                          <Label fx:id="offlineLabel" onDragDetected="#OfflineLabel" text="  240" />
                                           <Label text="OFFLINE" />
                                        </children>
                                     </VBox>
@@ -192,7 +192,7 @@
                               <Canvas fx:id="donutCanvas" height="280.0" width="280.0" />
                               <VBox alignment="CENTER" mouseTransparent="true" pickOnBounds="false" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                                  <children>
-                                    <Label text="1,024" textFill="#2d3748">
+                                    <Label fx:id="totalLabel" onDragDetected="#TotalLabel" text="1,024" textFill="#2d3748">
                                        <font>
                                           <Font size="27.0" />
                                        </font>
@@ -209,19 +209,19 @@
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Circle fill="#10b981" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" 42% Active" textFill="#718096" />
+                              <Label fx:id="activeLabelPrecentege" onDragDetected="#ActiveLabelPrecentege" text="  42% Active" textFill="#718096" />
                            </children>
                         </HBox>
                         <HBox layoutX="534.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Circle fill="#3b82f6" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" 35% Online" textFill="#718096" />
+                              <Label fx:id="onlineLabelPricentege" onDragDetected="#OnlineLabelPricentege" text="  35% Online" textFill="#718096" />
                            </children>
                         </HBox>
                         <HBox layoutX="649.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <Circle fill="#e5e7eb" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" 23% Offline" textFill="#718096" />
+                              <Label fx:id="offlineLabelPrecentege" onDragDetected="#OfflineLabelPrecentege" text="  23% Offline" textFill="#718096" />
                            </children>
                         </HBox>
                      </children>

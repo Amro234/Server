@@ -1,5 +1,6 @@
 package com.mycompany.server.db;
 
+import com.mycompany.server.manager.OnlineUsersManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -21,13 +22,14 @@ public class DatabaseManager {
             }
             createTables();
         } catch (Exception e) {
-          //  System.err.println("[DB] Database fatal error: " + e.getMessage());
+            System.err.println("[DB] Database fatal error: " + e.getMessage());
         }
     }
 
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
             instance = new DatabaseManager();
+             System.out.println("[UI] Total: "+OnlineUsersManager.getInstance().getOnlineCount());
         }
         return instance;
     }
