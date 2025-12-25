@@ -1,11 +1,11 @@
 package com.mycompany.server.db;
 
-import com.mycompany.server.manager.OnlineUsersManager;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import com.mycompany.server.manager.OnlineUsersManager;
 
 public class DatabaseManager {
     private static DatabaseManager instance;
@@ -22,7 +22,7 @@ public class DatabaseManager {
             }
             createTables();
         } catch (Exception e) {
-            System.err.println("[DB] Database fatal error: " + e.getMessage());
+            // System.err.println("[DB] Database fatal error: " + e.getMessage());
         }
     }
 
