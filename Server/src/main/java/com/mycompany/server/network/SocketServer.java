@@ -11,13 +11,14 @@ public class SocketServer {
     private static final int PORT = 5000;
     private ServerSocket serverSocket;
     private boolean running = false;
-    private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private ExecutorService executorService;
     private final Vector<ClientHandler> clients = new Vector<>();
 
     public void start() {
         if (running)
             return;
         System.out.println("Server Running on Port 5000");
+        executorService = Executors.newCachedThreadPool();
         new Thread(() -> {
             try {
                 serverSocket = new ServerSocket(PORT);
