@@ -242,11 +242,41 @@ public class GameSessionManager {
                 int opponentId = (userId == session.getPlayer1Id()) ? session.getPlayer2Id() : session.getPlayer1Id();
                 ClientHandler opponent = OnlineUsersManager.getInstance().getHandler(opponentId);
 
+                // Only award points if the game was ACTIVE (Forfeit)
+                // If game is already over, no points change (just leaving lobby/post-game
+                // screen)
+                if (session.isActive()) {
+                    // Update Winner Score
+                    if (opponentId == session.getPlayer1Id()) {
+                        session.incrementP1Wins();
+                        OnlineUsersManager.getInstance().updateUserScore(session.getPlayer1Id(), 10);
+                    } else {
+                        session.incrementP2Wins();
+                        OnlineUsersManager.getInstance().updateUserScore(session.getPlayer2Id(), 10);
+                    }
+                }
+
                 if (opponent != null) {
+                    // Fetch updated scores
+                    int p1Score = 0;
+                    if (OnlineUsersManager.getInstance().getUser(session.getPlayer1Id()) != null)
+                        p1Score = OnlineUsersManager.getInstance().getUser(session.getPlayer1Id()).getScore();
+
+                    int p2Score = 0;
+                    if (OnlineUsersManager.getInstance().getUser(session.getPlayer2Id()) != null)
+                        p2Score = OnlineUsersManager.getInstance().getUser(session.getPlayer2Id()).getScore();
+
                     JSONObject msg = new JSONObject();
                     msg.put("type", "GAME_OVER");
                     msg.put("status", reason);
-                    msg.put("winnerId", opponentId); // Opponent wins by default
+                    msg.put("winnerId", opponentId); // Opponent wins by default if active, or just notification if
+                                                     // inactive
+                    msg.put("p1Score", p1Score);
+                    msg.put("p2Score", p2Score);
+                    msg.put("sessionP1Wins", session.getP1Wins());
+                    msg.put("sessionP2Wins", session.getP2Wins());
+                    msg.put("sessionDraws", session.getDraws());
+
                     opponent.sendNotification(msg);
                 }
                 removeSession(sessionId);
