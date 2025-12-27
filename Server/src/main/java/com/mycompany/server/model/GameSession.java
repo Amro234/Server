@@ -34,6 +34,10 @@ public class GameSession {
         }
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     public String getSessionId() {
         return sessionId;
     }
