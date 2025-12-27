@@ -28,6 +28,7 @@ public class ClientHandler implements Runnable {
         REMATCH_DECLINE,
         GAME_MOVE,
         LEAVE_GAME,
+        PING,
         UNKNOWN
     }
 
@@ -237,6 +238,12 @@ public class ClientHandler implements Runnable {
                 leaveAck.put("success", true);
                 leaveAck.put("message", "Left game");
                 return leaveAck;
+
+            case PING:
+                JSONObject pingAck = new JSONObject();
+                pingAck.put("success", true);
+                pingAck.put("type", "PONG");
+                return pingAck;
 
             default:
                 JSONObject response = new JSONObject();
