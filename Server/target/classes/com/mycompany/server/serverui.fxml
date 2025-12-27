@@ -18,12 +18,12 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<!-- HTML !-->
-
-<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.server.ServerUi.ServeruiController">
+<AnchorPane id="AnchorPane" prefHeight="720.0" prefWidth="1280.0"
+   xmlns="http://javafx.com/javafx/25"
+   xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.server.ServerUi.ServeruiController">
    <stylesheets>
-        <URL value="@../css/customeStyle.css" />
-    </stylesheets>
+      <URL value="@../css/customeStyle.css" />
+   </stylesheets>
    <children>
       <BorderPane prefHeight="726.0" prefWidth="1287.0">
          <top>
@@ -44,12 +44,12 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label layoutX="1095.0" layoutY="19.0" text="Server Online" textFill="#12d335">
+                  <Label fx:id="statusLabel" layoutX="1095.0" layoutY="19.0" text="Server Offline" textFill="#ff0000">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
                      <graphic>
-                        <Circle fill="#1fff63" radius="8.0" stroke="#1fff63" strokeType="INSIDE" />
+                        <Circle fx:id="statusCircle" fill="#ff0000" radius="8.0" stroke="#ff0000" strokeType="INSIDE" />
                      </graphic>
                   </Label>
                </children>
@@ -68,9 +68,9 @@
                         <Font name="System Bold" size="13.0" />
                      </font>
                   </Label>
-                  
+
                   <!-- Start Server Button -->
-                  <Button layoutX="831.0" layoutY="70.0" mnemonicParsing="false">
+                  <Button fx:id="startServerBtn" layoutX="831.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleStartServer">
                      <styleClass>
                         <String fx:value="server-button" />
                         <String fx:value="start-button" />
@@ -95,7 +95,7 @@
                   </Button>
 
                   <!-- Stop Server Button -->
-                  <Button layoutX="1044.0" layoutY="70.0" mnemonicParsing="false">
+                  <Button fx:id="stopServerBtn" layoutX="1044.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleStopServer">
                      <styleClass>
                         <String fx:value="server-button" />
                         <String fx:value="stop-button" />
@@ -143,37 +143,42 @@
                            </children>
                         </VBox>
                         <Region prefHeight="35.0" prefWidth="609.0" />
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox prefHeight="100.0" prefWidth="400.0" spacing="30.0" alignment="CENTER_RIGHT">
                            <children>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" alignment="CENTER_LEFT">
                                  <children>
                                     <Circle fill="#10b981" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label text=" 428" />
-                                          <Label text="ACTIVE" />
+                                          <Label fx:id="onlineLabel" text="0" onMouseClicked="#OnlineLabel">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="ONLINE" textFill="#718096">
+                                             <font>
+                                                <Font size="10.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </VBox>
                                  </children>
                               </HBox>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
-                                 <children>
-                                    <Circle fill="DODGERBLUE" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                                    <VBox prefHeight="200.0" prefWidth="100.0">
-                                       <children>
-                                          <Label text=" 356" />
-                                          <Label text="ONLINE" />
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </HBox>
-                              <HBox prefHeight="100.0" prefWidth="200.0">
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" alignment="CENTER_LEFT">
                                  <children>
                                     <Circle fill="#e5e7eb" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label text=" 240" />
-                                          <Label text="OFFLINE" />
+                                          <Label fx:id="offlineLabel" text="0" onMouseClicked="#OfflineLabel">
+                                             <font>
+                                                <Font name="System Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label text="OFFLINE" textFill="#718096">
+                                             <font>
+                                                <Font size="10.0" />
+                                             </font>
+                                          </Label>
                                        </children>
                                     </VBox>
                                  </children>
@@ -192,36 +197,52 @@
                               <Canvas fx:id="donutCanvas" height="280.0" width="280.0" />
                               <VBox alignment="CENTER" mouseTransparent="true" pickOnBounds="false" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
                                  <children>
-                                    <Label text="1,024" textFill="#2d3748">
+                                    <Label fx:id="totalLabel" text="0" textFill="#2d3748" onMouseClicked="#TotalLabel">
                                        <font>
-                                          <Font size="27.0" />
+                                          <Font name="System Bold" size="27.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="10.0" layoutY="10.0" style="-fx-letter-spacing: 1px; -fx-font-weight: 600;" text="TOTAL USERS" textFill="#718096" />
+                                    <Label layoutX="10.0" layoutY="10.0" style="-fx-letter-spacing: 1px; -fx-font-weight: 600;" text="TOTAL USERS" textFill="#718096">
+                                       <font>
+                                          <Font size="11.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </VBox>
                            </children>
                         </StackPane>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="30.0">
                      <children>
-                        <HBox prefHeight="100.0" prefWidth="200.0">
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0" alignment="CENTER">
                            <children>
                               <Circle fill="#10b981" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" 42% Active" textFill="#718096" />
+                              <Label fx:id="onlineLabelPricentege" text="0%" textFill="#718096" onMouseClicked="#OnlineLabelPricentege">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Online" textFill="#718096">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </HBox>
-                        <HBox layoutX="534.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <Circle fill="#3b82f6" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" 35% Online" textFill="#718096" />
-                           </children>
-                        </HBox>
-                        <HBox layoutX="649.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                        <HBox layoutX="649.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0" alignment="CENTER">
                            <children>
                               <Circle fill="#e5e7eb" radius="6.0" stroke="BLACK" strokeType="INSIDE" />
-                              <Label text=" 23% Offline" textFill="#718096" />
+                              <Label fx:id="offlineLabelPrecentege" text="0%" textFill="#718096" onMouseClicked="#OfflineLabelPrecentege">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Offline" textFill="#718096">
+                                 <font>
+                                    <Font size="12.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </HBox>
                      </children>
