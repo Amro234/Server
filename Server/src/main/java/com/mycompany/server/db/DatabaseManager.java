@@ -9,6 +9,8 @@ import java.sql.Statement;
 import com.mycompany.server.manager.OnlineUsersManager;
 import com.mycompany.server.manager.OnlineUsersManager;
 
+import com.mycompany.server.manager.OnlineUsersManager;
+
 public class DatabaseManager {
     private static DatabaseManager instance;
     private static final String DB_URL = "jdbc:derby://localhost:1527/tic_tac_toe;create=false";
