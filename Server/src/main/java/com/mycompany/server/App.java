@@ -19,6 +19,16 @@ public class App extends Application {
     public void start(Stage stage) throws IOException {
         scene = new Scene(loadFXML("serverui"), 1280, 720);
         stage.setScene(scene);
+
+        // Set the application icon
+        try {
+            stage.getIcons()
+                    .add(new javafx.scene.image.Image(App.class.getResourceAsStream("assets/images/serverIcon.png")));
+        } catch (Exception e) {
+            System.err.println("Could not load icon: " + e.getMessage());
+        }
+
+        stage.setTitle("Tic Tac Toe Server");
         stage.show();
     }
 
