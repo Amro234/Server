@@ -272,7 +272,11 @@ This project is part of an educational/training program.
 
 ## 👥 Authors
 
-- ITI Java Project Team
+- **Amro Mohamed Ali Mahmoud**
+- **Eslam Ehab Mohamed Lotfy**
+- **Ahmed Khaled Mahmoud**
+- **Antoneos Philip Samir**
+- **Mohamed Ali Abdelfattah**
 
 ## 🙏 Acknowledgments
 
